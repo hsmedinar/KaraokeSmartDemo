@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">DemoKaraokeSmart</string>
+    <string name="action_settings">Settings</string>
+    <string name="url">http://api.karaokesmart.co/v1/songs/test/</string>
+    <string name="database">DBks</string>
+
+
+
+</resources>
