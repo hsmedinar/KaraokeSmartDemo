@@ -157,7 +157,6 @@ public class ListenActivity extends AppCompatActivity implements View.OnClickLis
         }
 
         stopService(intentPlayServices);
-
     }
 
 
@@ -205,4 +204,10 @@ public class ListenActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+
+    }
 }

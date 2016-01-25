@@ -28,6 +28,7 @@
         <activity android:name=".MainActivity"  android:theme="@style/AppTheme"></activity>
         <activity android:name=".PlayerActivity" android:theme="@style/AppTheme" android:noHistory="true"></activity>
         <activity android:name=".ListenActivity" android:theme="@style/AppTheme" android:noHistory="true"></activity>
+        <activity android:name=".ListenAudioActivity" android:theme="@style/AppTheme" android:noHistory="true"></activity>
         <service android:name=".servicios.myPlayService"></service>
 
     </application>

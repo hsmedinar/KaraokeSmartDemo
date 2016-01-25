@@ -9,6 +9,7 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -50,7 +51,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     private LinearLayout indicator;
     private boolean inPause=false;
 
-
+    private final Handler handler = new Handler();
 
     private static final int RECORDER_BPP = 16;
     private static final int RECORDER_SAMPLERATE = 44100;
@@ -61,6 +62,8 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     private int bufferSize = 0;
     private Thread recordingThread = null;
     private boolean isRecording = false;
+
+    private boolean startVideo = false;
 
 
     private VideoView video;
@@ -107,14 +110,6 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onSecondaryViewAppeared(final FABRevealLayout fabRevealLayout, View secondaryView) {
                 play();
-
-                if(!inPause) {
-                    Log.i("new record", " start new");
-                    startRecording(false);
-                }else {
-                    Log.i("add record", " adding new");
-                    startRecording(true);
-                }
             }
         });
     }
@@ -183,7 +178,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                 stop();
                 stopRecording(true);
                 fabRevealLayout.revealMainView();
-                intent = new Intent(PlayerActivity.this,ListenActivity.class);
+                intent = new Intent(PlayerActivity.this,ListenAudioActivity.class);
                 intent.putExtra("audio", pathFile(pathPista, 2));
                 intent.putExtra("pista", pathFile(pathPista, 1));
                 startActivity(intent);
@@ -207,7 +202,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
             video.setMediaController(null);
             video.setVideoURI(uri);
-
+            //setupHandler();
 
             if (myAudioMedia == null) {
                 myAudioMedia = new MediaPlayer();
@@ -239,8 +234,50 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 
+    private void setupHandler() {
+        handler.removeCallbacks(sendUpdatesToUI);
+        handler.postDelayed(sendUpdatesToUI, 1000); // 1 second
+    }
+
+    private Runnable sendUpdatesToUI = new Runnable() {
+        public void run() {
+
+            //LogMediaPosition();
+
+            if (video.isPlaying()) {
+                //startRecording(false);
+                Toast.makeText(PlayerActivity.this,"inicia video",Toast.LENGTH_SHORT).show();
+
+            }
+            handler.removeCallbacks(sendUpdatesToUI);
+            handler.postDelayed(this, 1000); // 2 seconds
+
+        }
+    };
+
+    private void LogMediaPosition() {
+
+        if (video.isPlaying()) {
+            //startRecording(false);
+            Toast.makeText(PlayerActivity.this,"inica video",Toast.LENGTH_SHORT).show();
+            handler.removeCallbacks(sendUpdatesToUI);
+        }
+    }
+
     private void play(){
 
+        video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                if(!inPause) {
+                    Log.i("new record", " start new");
+                    startRecording(false);
+                }else {
+                    Log.i("add record", " adding new");
+                    startRecording(true);
+                }
+            }
+        });
         video.start();
 
         /*if(!myAudioMedia.isPlaying()) {
